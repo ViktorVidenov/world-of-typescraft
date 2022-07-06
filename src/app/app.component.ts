@@ -13,7 +13,6 @@ import { Point, ResourcesType, Team, UnitType } from 'src/models/models';
 // create unit Marto 10,10 Blue Guard 
 // create resource Lumber 0,1 30  
 // order Kris attack
-// test push
 
 export class AppComponent {
   public outputMessages: string[] = [];
@@ -71,7 +70,7 @@ export class AppComponent {
         }
 
         const unit = new Unit(cordinates, team, name, type);
-        
+
         this.worldObjects.push(unit);
         this.names.push(name);
 
