@@ -119,14 +119,13 @@ export class AppComponent {
     }
   }
 
-
   public orderUnit(commands: string[]) {
     switch (commands[2]) {
       case 'attack':
         const name: string = commands[1];
 
         if (this.names.includes(name)) {
-          console.log('vikase');
+          console.log(this.worldObjects);
         }
 
         break;
