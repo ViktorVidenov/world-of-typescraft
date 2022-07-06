@@ -1,4 +1,4 @@
-import { Point, ResourcesModule, ResourcesType, Team } from "src/models/models";
+import { Point, ResourcesModule, ResourcesType } from "src/models/models";
 import { WorldObject } from "./WorldObject";
 
 export class Resource extends WorldObject implements ResourcesModule {
@@ -11,6 +11,13 @@ export class Resource extends WorldObject implements ResourcesModule {
 
     public get resourceType(): ResourcesType {
         return this._resourceType;
+    }
+
+    public set quantity(value: number) {
+        this._quantity = value;
+        if(this._quantity === 0) {
+            this.isDestroyed = true;
+        }
     }
 
     constructor(

@@ -30,6 +30,8 @@ export class Unit extends WorldObject implements UnitModel {
 
     constructor(position: Point, team: Team, name: string, type: UnitType) {
         super(position, true, team);
+        this._name = name;
+        this._type = type;
 
         this.setUnitStats(type)
     }
@@ -63,7 +65,7 @@ export class Unit extends WorldObject implements UnitModel {
             case UnitType.PEASANT:
                 this._attack = 25;
                 this._defense = 10;
-                this._canGather = false;
+                this._canGather = true;
                 this.healthPoints = 50;
                 this.canMove = true;
                 //TODO - atackFunction

@@ -11,6 +11,10 @@ export abstract class WorldObject implements WorldObjectModel {
         return this._isDestroyed;
     }
 
+    public set isDestroyed(value: boolean) {
+        this._isDestroyed = value;
+    }
+
     public get healthPoints(): number {
         return this._healthPoints;
     }
