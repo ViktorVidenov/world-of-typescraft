@@ -70,7 +70,7 @@ export class AppComponent {
         }
 
         const unit = new Unit(cordinates, team, name, type);
-  
+        
         this.worldObjects.push(unit);
         this.names.push(name);
 
