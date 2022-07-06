@@ -3,7 +3,7 @@ import { Resource } from 'src/classes/Resource';
 import { Unit } from 'src/classes/Unit';
 import { WorldObject } from 'src/classes/WorldObject';
 import { Point, ResourcesType, Team, UnitType } from 'src/models/models';
-import { validatePosition } from 'src/validation/validation';
+import { moveUnit, validatePosition } from 'src/validation/validation';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +13,9 @@ import { validatePosition } from 'src/validation/validation';
 
 // create unit Marto 10,10 Blue Guard
 // create resource Lumber 0,1 30
+// order Kris go 42,53
 // order Kris attack
+
 export class AppComponent {
   public outputMessages: string[] = [];
   public worldObjects: WorldObject[] = [];
@@ -73,15 +75,16 @@ export class AppComponent {
           break;
         }
 
-        // if (validatePosition(cordinates)) {
-        //   this.outputMessages.push('Invalid Cordinates!');
-        //   break;
-        // }
+        if (validatePosition(cordinates)) {
+          this.outputMessages.push('Invalid Cordinates!');
+          break;
+        }
 
         const unit = new Unit(cordinates, team, name, type);
 
         this.worldObjects.push(unit);
         this.names.push(name);
+        this.cordinates.push([cordinates, name])
 
         this.outputMessages.push(
           `Created ${type.toString().toLowerCase()} from ${team
@@ -93,11 +96,8 @@ export class AppComponent {
         break;
 
       case 'resource':
-        const resourceType: ResourcesType =
-          commands[2].toUpperCase() as ResourcesType;
-        const resourceCordinates: Point = this.getCordinatesByString(
-          commands[3]
-        );
+        const resourceType: ResourcesType = commands[2].toUpperCase() as ResourcesType;
+        const resourceCordinates: Point = this.getCordinatesByString(commands[3]);
         const healthPoints: number = Number(commands[4]);
 
         if (healthPoints < 1 || isNaN(healthPoints)) {
@@ -130,7 +130,7 @@ export class AppComponent {
           break;
         }
 
-        this.cordinates.push(resourceCordinates);
+        // this.cordinates.push(resourceCordinates);
         this.worldObjects.push(resource);
 
         this.outputMessages.push(
@@ -150,11 +150,15 @@ export class AppComponent {
 
   public orderUnit(commands: string[]) {
     const name: string = commands[1];
-    const position = this.getCordinatesByString(commands[3]);
     switch (commands[2]) {
       case 'attack':
+
+        console.log(this.cordinates);
+        // this.cordinates[0] = { x: 2, y: 3 }
+        // console.log(this.worldObjects, 'WorldObjec');
+
         if (this.names.includes(name)) {
-          console.log(this.worldObjects);
+
         }
         break;
 
@@ -162,34 +166,23 @@ export class AppComponent {
         break;
 
       case 'go':
+        const position = this.getCordinatesByString(commands[3]);
         if (!this.names.includes(name)) {
           this.outputMessages.push('User not found!');
           break;
         }
 
-        if (validatePosition(position, this.names, name)) {
-          const newUnit = new Unit(position, Team.NEUTRAL, name, UnitType.GIANT)
-          const foundUnit = this.worldObjects.find((_name) => newUnit.name === name)
-          foundUnit?.modifyPosition(position)
-          this.outputMessages.push(`${foundUnit} moved to`)
+        if (validatePosition(position)) {
           this.outputMessages.push('Please enter valid coordinates!');
           break;
         }
 
-        // if (this.worldObjects !== undefined || this.worldObjects !== null) {
+        if (this.worldObjects !== undefined || this.worldObjects !== null) {
+          this.outputMessages.push(moveUnit(position, Team.NEUTRAL, name, UnitType.GIANT, this.worldObjects))
+          break;
+        }
 
-        //   this.worldObjects.forEach((row) => {
-        //     console.log(Object.values(row).find((_name) => name === newUnit.name));
-
-        //   })
-        //   const editedUnit = this.worldObjects.find((_name) => name === newUnit.name)
-
-        //   editedUnit?.modifyPosition(position);
-        // }
-
-        // console.log(this.worldObjects);
-
-
+        this.cordinates.push([position, name])
         break;
 
       default:
