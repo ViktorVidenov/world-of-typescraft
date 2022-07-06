@@ -23,7 +23,7 @@ export class AppComponent {
 
   @ViewChild('inputArea') inputArea: ElementRef;
 
-  constructor() {}
+  constructor() { }
 
   executeCommand() {
     const commands = this.inputArea.nativeElement.value.split(' ');
@@ -48,7 +48,6 @@ export class AppComponent {
         const cordinates: Point = this.getCordinatesByString(commands[3]);
         const team: Team = commands[4].toUpperCase() as Team;
         const type: UnitType = commands[5].toUpperCase() as UnitType;
-        const posValidate = validatePosition(cordinates);
 
         if (this.names.includes(name)) {
           this.outputMessages.push('Unit with this name already exists!');
@@ -69,12 +68,15 @@ export class AppComponent {
           break;
         }
 
-        validatePosition(cordinates)
-
         if (name.length >= 20) {
           this.outputMessages.push('Unit name too long!');
           break;
         }
+
+        // if (validatePosition(cordinates)) {
+        //   this.outputMessages.push('Invalid Cordinates!');
+        //   break;
+        // }
 
         const unit = new Unit(cordinates, team, name, type);
 
@@ -85,8 +87,8 @@ export class AppComponent {
           `Created ${type.toString().toLowerCase()} from ${team
             .toString()
             .toLowerCase()} team named ${name} at position ${this.getStringByCoordinates(
-            cordinates
-          )}`
+              cordinates
+            )}`
         );
         break;
 
@@ -135,8 +137,8 @@ export class AppComponent {
           `Created ${resourceType
             .toString()
             .toLowerCase()} at position ${this.getStringByCoordinates(
-            resourceCordinates
-          )} with ${healthPoints} health`
+              resourceCordinates
+            )} with ${healthPoints} health`
         );
 
         break;
@@ -149,7 +151,6 @@ export class AppComponent {
   public orderUnit(commands: string[]) {
     const name: string = commands[1];
     const position = this.getCordinatesByString(commands[3]);
-    const posVal = validatePosition(position)
     switch (commands[2]) {
       case 'attack':
         if (this.names.includes(name)) {
@@ -161,18 +162,34 @@ export class AppComponent {
         break;
 
       case 'go':
-
         if (!this.names.includes(name)) {
           this.outputMessages.push('User not found!');
           break;
         }
-        // if(isNaN(position.x) || isNaN(position.y)) {
-        //   this.outputMessages.push("Invalid position")
-        // }
-        if(!posVal) {
-          this.outputMessages.push("NE ZNAM VECHE")
+
+        if (validatePosition(position, this.names, name)) {
+          const newUnit = new Unit(position, Team.NEUTRAL, name, UnitType.GIANT)
+          const foundUnit = this.worldObjects.find((_name) => newUnit.name === name)
+          foundUnit?.modifyPosition(position)
+          this.outputMessages.push(`${foundUnit} moved to`)
+          this.outputMessages.push('Please enter valid coordinates!');
+          break;
         }
-        console.log(position);
+
+        // if (this.worldObjects !== undefined || this.worldObjects !== null) {
+
+        //   this.worldObjects.forEach((row) => {
+        //     console.log(Object.values(row).find((_name) => name === newUnit.name));
+
+        //   })
+        //   const editedUnit = this.worldObjects.find((_name) => name === newUnit.name)
+
+        //   editedUnit?.modifyPosition(position);
+        // }
+
+        // console.log(this.worldObjects);
+
+
         break;
 
       default:

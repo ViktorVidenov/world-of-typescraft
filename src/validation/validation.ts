@@ -1,12 +1,13 @@
-import {Point} from "src/models/models"
+import { Point } from "src/models/models"
 
-export function validatePosition(
-  position: Point,
+export function validatePosition(position: Point, names: string[], unitName: string): boolean {
+  let isNotValidPosition = false;
 
-): string {
-  if(isNaN(position.x) || isNaN(position.y)) {
-    console.log("Invalid position");
-     
+  if(!names.includes(unitName)) {
+    return false;
   }
-  return ""
+  if (isNaN(position.x) || isNaN(position.y)) {
+    return isNotValidPosition = true
+  }
+  return isNotValidPosition
 }
