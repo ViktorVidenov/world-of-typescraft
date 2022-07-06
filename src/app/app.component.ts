@@ -12,6 +12,7 @@ import { Point, ResourcesType, Team, UnitType } from 'src/models/models';
 
 // create unit Marto 10,10 Blue Guard 
 // create resource Lumber 0,1 30  
+// order Kris attack
 
 export class AppComponent {
   public outputMessages: string[] = [];
@@ -31,6 +32,9 @@ export class AppComponent {
     switch (command) {
       case 'create':
         this.createWorldObject(commands);
+        break;
+      case 'order':
+        this.orderUnit(commands);
         break;
       default:
         break;
@@ -66,6 +70,7 @@ export class AppComponent {
         }
 
         const unit = new Unit(cordinates, team, name, type);
+  
         this.worldObjects.push(unit);
         this.names.push(name);
 
@@ -79,31 +84,30 @@ export class AppComponent {
         const resourceCordinates: Point = this.getCordinatesByString(commands[3]);
         const healthPoints: number = Number(commands[4]);
 
-        const resource = new Resource(resourceType, resourceCordinates, healthPoints)
-
-        this.compareCordinates(this.cordinates, resourceCordinates)
-
-        if (resourceType !== ResourcesType.FOOD && resourceType !== ResourcesType.IRON && resourceType !== ResourcesType.LUMBER) {
-          this.outputMessages.push(
-            `Resource type ${resource.resourceType.toLowerCase().toString()} does not exist!`
-          )
-          break;
-        }
-
-        if (this.isFindedEqualCordinates) {
-          
-          console.log(this.cordinates, 'in if-a');
-          this.isFindedEqualCordinates = false;
-          break;
-        }
-
         if (healthPoints < 1) {
           this.outputMessages.push(`Please provide valid quantity!`)
           break;
         }
 
+        if (resourceType !== ResourcesType.FOOD && resourceType !== ResourcesType.IRON && resourceType !== ResourcesType.LUMBER) {
+          //TODO - to be lowerCase
+          this.outputMessages.push(
+            `Resource type ${resourceType} does not exist!`
+          )
+          break;
+        }
+
+        const resource = new Resource(resourceType, resourceCordinates, healthPoints)
+        this.compareCordinates(this.cordinates, resourceCordinates)
+
+        if (this.isFindedEqualCordinates) {
+          this.isFindedEqualCordinates = false;
+          break;
+        }
+
         this.cordinates.push(resourceCordinates);
-        console.log(this.cordinates);
+        this.worldObjects.push(resource);
+
         this.outputMessages.push(
           `Created ${resourceType.toString().toLowerCase()} at position ${this.getStringByCoordinates(resourceCordinates)} with ${healthPoints} health`
         );
@@ -113,6 +117,27 @@ export class AppComponent {
       default:
         break;
     }
+  }
+
+
+  public orderUnit(commands: string[]) {
+    switch (commands[2]) {
+      case 'attack':
+        const name: string = commands[1];
+
+        if (this.names.includes(name)) {
+          console.log('vikase');
+        }
+
+        break;
+      case 'gather':
+        break;
+      case 'go':
+        break;
+      default:
+        break;
+    }
+
   }
 
   private getCordinatesByString(cordinates: string): Point {
