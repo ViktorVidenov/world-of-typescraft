@@ -156,22 +156,18 @@ export class AppComponent {
     const name: string = commands[1];
     switch (commands[2]) {
       case 'attack':
-
-        const attacker = this.worldObjects.find(
-          (unit) => unit.name === name,
-        );
-
-        console.log(this.worldObjects);
-        console.log(attacker?.position);
-
-        if (!this.names.includes(name)) {
-
-        }
-
-        this.names.push(name)
-
+        let attacker: Unit  ;
+        this.worldObjects.forEach((worldObject) => {
+          if (worldObject instanceof Unit) {
+            if (worldObject.name === name) {
+              attacker = worldObject;
+            }
+            console.log(attacker.position, 'INSTANCE')
+          }
+          console.log(attacker.position, '')
+        })
+        
         break;
-
       case 'gather':
         break;
 
@@ -187,12 +183,15 @@ export class AppComponent {
           break;
         }
 
-        if (this.worldObjects !== undefined || this.worldObjects !== null) {
-          this.outputMessages.push(moveUnit(position, Team.NEUTRAL, name, UnitType.GIANT, this.worldObjects))
-          break;
-        }
 
-        this.cordinates.push([position, name])
+        // this.worldObjects.forEach((worldObject) => {
+        //   if (worldObject instanceof Unit) {
+        //     worldObject
+        //   }
+        // })
+
+        // this.outputMessages.push(moveUnit(position, Team.NEUTRAL, name, UnitType.GIANT, this.worldObjects))
+
         break;
 
       default:
