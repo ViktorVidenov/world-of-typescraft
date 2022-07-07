@@ -104,7 +104,7 @@ export class AppComponent {
           this.outputMessages.push(`Please provide valid quantity!`);
           break;
         }
-        
+
         if (
           resourceType !== ResourcesType.FOOD &&
           resourceType !== ResourcesType.IRON &&
@@ -156,20 +156,32 @@ export class AppComponent {
     const name: string = commands[1];
     switch (commands[2]) {
       case 'attack':
-        let arrWorldObject = this.worldObjects.forEach((row) =>{
-          console.log(Object.entries(row))
+        // let currentUser: WorldObject[] = [];
 
 
+        // this.worldObjects.forEach((row) => {
+        //   Object.entries(row).forEach((innerParams) => {
+        //     let paramValue = innerParams[1]
+        //     if (paramValue !== name && row.position) {
+        //       currentUser.push(row);
+        //     } 
+        //   })
+        //   return currentUser
+        // })
+        // console.log(currentUser);
+
+        this.worldObjects.forEach((unit) => {
+          const foundUnit = <Unit>unit;
+          if (foundUnit.name === name) {
+            console.log(foundUnit.name, 'DUMKAI SE');
+            
+          }
         })
-        console.log("+++++++++++++++++++++")
-        console.log(arrWorldObject)
-        // console.log(this.cordinates);
-        // this.cordinates[0] = { x: 2, y: 3 }
-        // console.log(this.worldObjects, 'WorldObjec');
 
-        if (this.names.includes(name)) {
+        if (!this.names.includes(name)) {
 
         }
+
         this.names.push(name)
 
         break;
