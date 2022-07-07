@@ -15,7 +15,7 @@ export class Resource extends WorldObject implements ResourcesModule {
 
     public set quantity(value: number) {
         this._quantity = value;
-        if(this._quantity === 0) {
+        if (this._quantity === 0) {
             this.isDestroyed = true;
         }
     }

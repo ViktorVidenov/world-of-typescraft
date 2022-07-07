@@ -101,7 +101,6 @@ export class AppComponent {
         }
 
         this.compareCordinates(this.cordinates, resourceCordinates);
-        const resource = new Resource(resourceType, resourceCordinates, healthPoints);
 
         if (validatePosition(resourceCordinates)) {
           this.outputMessages.push('Invalid Cordinates!');
@@ -113,9 +112,10 @@ export class AppComponent {
           break;
         }
 
+        const resource = new Resource(resourceType, resourceCordinates, healthPoints);
         this.cordinates.push(resourceCordinates);
-        
         this.worldObjects.push(resource);
+
         this.outputMessages.push(`Created ${resourceType.toString().toLowerCase()} at position ${this.getStringByCoordinates(resourceCordinates)} with ${healthPoints} health`);
         break;
 
@@ -128,31 +128,28 @@ export class AppComponent {
     const name: string = commands[1];
     switch (commands[2]) {
       case 'attack':
-        const attacker = this.worldObjects.find(
-          (unit) => unit.name === name,
-        );
 
         this.worldObjects.forEach((unit) => {
+          const attacker = this.worldObjects.find(
+            (unit) => unit.name === name,
+          );
           if (attacker instanceof Unit && unit instanceof Unit) {
-            if (unit.position.y === attacker.position.y && unit.position.x === attacker.position.x && unit.team !== attacker.team && !unit.isDestroyed) {
-              console.log(unit);
+            if (unit.position.x === attacker.position.x && unit.position.y === attacker.position.y && unit.team !== attacker.team && !unit.isDestroyed) {
+
               let attackerDamage = attacker.attack - unit.defense;
               let defenderDamage = unit.attack - attacker.defense;
 
               unit.modifyHealthPoints(attackerDamage);
               attacker.modifyHealthPoints(defenderDamage);
 
-              console.log(attackerDamage, 'attackerDmg')
-              console.log(defenderDamage, 'DefenderDmg')
-
               this.outputMessages.push(`There was a fierce fight between ${unit.name} and ${attacker.name}.
-               The defender/s took totally ${attackerDamage} damage. The attacker took ${defenderDamage} damage.`)
+               The defender took totally ${attackerDamage} damage. The attacker took ${defenderDamage} damage.`)
+            } else if (unit.position.x === attacker.position.x && unit.position.y === attacker.position.y && attacker.team === unit.team && attacker.name !== unit.name && !unit.isDestroyed) {
+              this.outputMessages.push(`You cannot attack your friends, dummy!`)
             }
           }
         })
-
-        this.outputMessages.push()
-
+        
         break;
       case 'gather':
         break;
@@ -169,13 +166,11 @@ export class AppComponent {
           break;
         }
 
-        const changingName = this.worldObjects.find(
-          (unit) => unit.name === name,
+        const foundUnit = this.worldObjects.find(
+          (unit) => unit.name === name
         );
 
-        console.log(this.worldObjects, 'BEFOREMOVEUNIT');
-        this.moveUnit(position, changingName, this.worldObjects)
-        console.log(this.worldObjects);
+        this.moveUnit(position, foundUnit, this.worldObjects)
 
         break;
 
@@ -204,14 +199,14 @@ export class AppComponent {
     });
   }
 
-  private moveUnit(position: Point, changingName: any, worldObjects: WorldObject[]): void {
+  private moveUnit(position: Point, foundUnit: any, worldObjects: WorldObject[]): void {
 
     worldObjects.forEach((player) => {
-      if (changingName instanceof Unit) {
-        Object.values(player).forEach(playerName => {
-          if (playerName === changingName.name) {
+      if (foundUnit instanceof Unit) {
+        Object.values(player).forEach(playerValues => {
+          if (playerValues === foundUnit.name) {
             player.modifyPosition(position);
-            this.outputMessages.push(`Unit ${changingName.name} moved to ${position.x}, ${position.y}`)
+            this.outputMessages.push(`Unit ${foundUnit.name} moved to ${position.x}, ${position.y}`);
           }
         })
       }

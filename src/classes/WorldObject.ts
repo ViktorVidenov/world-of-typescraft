@@ -1,7 +1,6 @@
 import { Point, Team, WorldObjectModel } from "src/models/models";
 
 export abstract class WorldObject implements WorldObjectModel {
-    // [x: string]: any;
     private _isDestroyed: boolean;
     private _healthPoints: number;
     private _position: Point;

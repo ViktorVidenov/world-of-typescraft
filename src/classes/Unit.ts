@@ -44,7 +44,6 @@ export class Unit extends WorldObject implements UnitModel {
                 this._canGather = false;
                 this.healthPoints = 80;
                 this.canMove = true;
-                //TODO - atackFunction
                 break;
             case UnitType.GIANT:
                 this._attack = 40;
@@ -52,7 +51,6 @@ export class Unit extends WorldObject implements UnitModel {
                 this._canGather = true;
                 this.healthPoints = 90;
                 this.canMove = true;
-                //TODO - atackFunction
                 break;
             case UnitType.NINJA:
                 this._attack = 50;
@@ -60,7 +58,6 @@ export class Unit extends WorldObject implements UnitModel {
                 this._canGather = false;
                 this.healthPoints = 80;
                 this.canMove = true;
-                //TODO - atackFunction
                 break;
             case UnitType.PEASANT:
                 this._attack = 25;
@@ -68,7 +65,6 @@ export class Unit extends WorldObject implements UnitModel {
                 this._canGather = true;
                 this.healthPoints = 50;
                 this.canMove = true;
-                //TODO - atackFunction
                 break;
             default:
                 break;
