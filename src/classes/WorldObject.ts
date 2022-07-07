@@ -65,7 +65,7 @@ export abstract class WorldObject implements WorldObjectModel {
 
     //if someone attack u we will using modifyHealtPoints
     public modifyHealthPoints(value: number): void {
-        this._healthPoints += value;
+        this._healthPoints -= value;
         if (this._healthPoints <= 0) {
             this._healthPoints = 0;
             this._isDestroyed = true;

@@ -3,7 +3,7 @@ import { Resource } from 'src/classes/Resource';
 import { Unit } from 'src/classes/Unit';
 import { WorldObject } from 'src/classes/WorldObject';
 import { Point, ResourcesType, Team, UnitType } from 'src/models/models';
-import { moveUnit, validatePosition } from 'src/validation/validation';
+import { validatePosition } from 'src/validation/validation';
 
 @Component({
   selector: 'app-root',
@@ -162,10 +162,19 @@ export class AppComponent {
 
         this.worldObjects.forEach((unit) => {
           if (attacker instanceof Unit && unit instanceof Unit) {
-            if (unit.position.y === attacker.position.y && unit.position.x === attacker.position.x && unit.team !== attacker.team) {
-              console.log(unit, 'unit');
-              console.log(attacker.name, 'attackerName')
-              console.log(unit.name, 'unitName');
+            if (unit.position.y === attacker.position.y && unit.position.x === attacker.position.x && unit.team !== attacker.team && !unit.isDestroyed) {
+              console.log(unit);
+              let attackerDamage = attacker.attack - unit.defense;
+              let defenderDamage = unit.attack - attacker.defense;
+
+              unit.modifyHealthPoints(attackerDamage);
+              attacker.modifyHealthPoints(defenderDamage);
+
+              console.log(attackerDamage, 'attackerDmg')
+              console.log(defenderDamage, 'DefenderDmg')
+              
+              this.outputMessages.push(`There was a fierce fight between ${unit.name} and ${attacker.name}.
+               The defender/s took totally ${attackerDamage} damage. The attacker took ${defenderDamage} damage.`)
             }
           }
         })
