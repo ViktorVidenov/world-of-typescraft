@@ -156,23 +156,16 @@ export class AppComponent {
     const name: string = commands[1];
     switch (commands[2]) {
       case 'attack':
-        let attacker = {}
-
-        this.worldObjects.forEach((unit) => {
-          if (unit instanceof Unit) {
-            if (unit.name === name) {
-              attacker = unit;
-              return attacker
-            }
-            return attacker
-          }
-          return attacker
-        })
+        const attacker = this.worldObjects.find(
+          (unit) => unit.name === name,
+        );
 
         this.worldObjects.forEach((unit) => {
           if (attacker instanceof Unit && unit instanceof Unit) {
-            if (attacker.position.x === unit.position.x && attacker.position.y === unit.position.y && unit.team === attacker.team) {
-              this.outputMessages.push('You cannot attack your friends, dummy!')
+            if (unit.position.y === attacker.position.y && unit.position.x === attacker.position.x && unit.team !== attacker.team) {
+              console.log(unit, 'unit');
+              console.log(attacker.name, 'attackerName')
+              console.log(unit.name, 'unitName');
             }
           }
         })
