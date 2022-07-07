@@ -9,20 +9,3 @@ export function validatePosition(position: Point): boolean {
   }
   return isNotValidPosition
 }
-
-export function moveUnit(position: Point, team: Team, name: string, type: UnitType, worldObjects: WorldObject[]): string {
-  const newUnit = new Unit(name, position, team, type)
-  let output = ''
-  worldObjects.forEach((player) => {
-    Object.values(player).forEach(playerName => {
-      if (playerName === newUnit.name) {
-        player.modifyPosition(position);
-
-        output = `Unit ${newUnit.name} moved to ${position.x}, ${position.y}`
-        return
-      }
-      return output
-    })
-  })
-  return output
-}

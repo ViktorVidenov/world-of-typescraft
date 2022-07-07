@@ -11,11 +11,6 @@ import { validatePosition } from 'src/validation/validation';
   styleUrls: ['./app.component.scss'],
 })
 
-// create unit Marto 10,10 Blue Guard
-// create resource Lumber 0,1 30
-// order Kris go 42,53
-// order Kris attack
-
 export class AppComponent {
   public outputMessages: string[] = [];
   public worldObjects: WorldObject[] = [];
@@ -81,17 +76,10 @@ export class AppComponent {
         }
 
         const unit = new Unit(name, cordinates, team, type);
-
         this.worldObjects.push(unit);
         this.names.push(name);
-        this.cordinates.push([cordinates, name])
 
-        this.outputMessages.push(
-          `Created ${type.toString().toLowerCase()} from ${team
-            .toString()
-            .toLowerCase()} team named ${name} at position ${this.getStringByCoordinates(
-              cordinates
-            )}`
+        this.outputMessages.push(`Created ${type.toString().toLowerCase()} from ${team.toString().toLowerCase()} team named ${name} at position ${this.getStringByCoordinates(cordinates)}`
         );
         break;
 
@@ -105,46 +93,30 @@ export class AppComponent {
           break;
         }
 
-        if (
-          resourceType !== ResourcesType.FOOD &&
-          resourceType !== ResourcesType.IRON &&
-          resourceType !== ResourcesType.LUMBER
-        ) {
-          //TODO - to be lowerCase
+        if (resourceType !== ResourcesType.FOOD && resourceType !== ResourcesType.IRON && resourceType !== ResourcesType.LUMBER) {
           this.outputMessages.push(
             `Resource type ${resourceType} does not exist!`
           );
           break;
         }
 
-        const resource = new Resource(
-          resourceType,
-          resourceCordinates,
-          healthPoints
-        );
         this.compareCordinates(this.cordinates, resourceCordinates);
-
-        if (this.isFindedEqualCordinates) {
-          this.isFindedEqualCordinates = false;
-          break;
-        }
+        const resource = new Resource(resourceType, resourceCordinates, healthPoints);
 
         if (validatePosition(resourceCordinates)) {
           this.outputMessages.push('Invalid Cordinates!');
           break;
         }
 
+        if (this.isFindedEqualCordinates) {
+          this.isFindedEqualCordinates = false;
+          break;
+        }
+
         this.cordinates.push(resourceCordinates);
+        
         this.worldObjects.push(resource);
-
-        this.outputMessages.push(
-          `Created ${resourceType
-            .toString()
-            .toLowerCase()} at position ${this.getStringByCoordinates(
-              resourceCordinates
-            )} with ${healthPoints} health`
-        );
-
+        this.outputMessages.push(`Created ${resourceType.toString().toLowerCase()} at position ${this.getStringByCoordinates(resourceCordinates)} with ${healthPoints} health`);
         break;
 
       default:
@@ -172,7 +144,7 @@ export class AppComponent {
 
               console.log(attackerDamage, 'attackerDmg')
               console.log(defenderDamage, 'DefenderDmg')
-              
+
               this.outputMessages.push(`There was a fierce fight between ${unit.name} and ${attacker.name}.
                The defender/s took totally ${attackerDamage} damage. The attacker took ${defenderDamage} damage.`)
             }
@@ -197,14 +169,13 @@ export class AppComponent {
           break;
         }
 
+        const changingName = this.worldObjects.find(
+          (unit) => unit.name === name,
+        );
 
-        // this.worldObjects.forEach((worldObject) => {
-        //   if (worldObject instanceof Unit) {
-        //     worldObject
-        //   }
-        // })
-
-        // this.outputMessages.push(moveUnit(position, Team.NEUTRAL, name, UnitType.GIANT, this.worldObjects))
+        console.log(this.worldObjects, 'BEFOREMOVEUNIT');
+        this.moveUnit(position, changingName, this.worldObjects)
+        console.log(this.worldObjects);
 
         break;
 
@@ -231,5 +202,19 @@ export class AppComponent {
         this.isFindedEqualCordinates = true;
       }
     });
+  }
+
+  private moveUnit(position: Point, changingName: any, worldObjects: WorldObject[]): void {
+
+    worldObjects.forEach((player) => {
+      if (changingName instanceof Unit) {
+        Object.values(player).forEach(playerName => {
+          if (playerName === changingName.name) {
+            player.modifyPosition(position);
+            this.outputMessages.push(`Unit ${changingName.name} moved to ${position.x}, ${position.y}`)
+          }
+        })
+      }
+    })
   }
 }
