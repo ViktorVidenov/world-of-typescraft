@@ -130,7 +130,13 @@ export class AppComponent {
           break;
         }
 
-        // this.cordinates.push(resourceCordinates);
+        
+        if (validatePosition(resourceCordinates)) {
+          this.outputMessages.push('Invalid Cordinates!');
+          break;
+        }
+
+        this.cordinates.push(resourceCordinates);
         this.worldObjects.push(resource);
 
         this.outputMessages.push(
