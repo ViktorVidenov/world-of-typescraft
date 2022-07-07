@@ -11,7 +11,7 @@ export function validatePosition(position: Point): boolean {
 }
 
 export function moveUnit(position: Point, team: Team, name: string, type: UnitType, worldObjects: WorldObject[]): string {
-  const newUnit = new Unit(position, team, name, type)
+  const newUnit = new Unit(name, position, team, type)
   let output = ''
   worldObjects.forEach((player) => {
     Object.values(player).forEach(playerName => {
@@ -26,14 +26,3 @@ export function moveUnit(position: Point, team: Team, name: string, type: UnitTy
   })
   return output
 }
-
-// export function attackValidation(type: UnitType) {
-//   let currentType = type.toUpperCase()
-//   if (currentType === UnitType.PEASANT) { 
-
-//   }
-// }
-
-// export function attackUnit() {
-
-// }

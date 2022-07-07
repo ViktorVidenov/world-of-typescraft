@@ -28,7 +28,7 @@ export class Unit extends WorldObject implements UnitModel {
         return this._type;
     }
 
-    constructor(position: Point, team: Team, name: string, type: UnitType) {
+    constructor(name: string, position: Point, team: Team, type: UnitType) {
         super(position, true, team);
         this._name = name;
         this._type = type;

@@ -80,7 +80,7 @@ export class AppComponent {
           break;
         }
 
-        const unit = new Unit(cordinates, team, name, type);
+        const unit = new Unit(name, cordinates, team, type);
 
         this.worldObjects.push(unit);
         this.names.push(name);
@@ -152,31 +152,17 @@ export class AppComponent {
     }
   }
 
-  public orderUnit(commands: string[]) {
+  public orderUnit(commands: string) {
     const name: string = commands[1];
     switch (commands[2]) {
       case 'attack':
-        // let currentUser: WorldObject[] = [];
 
+        const attacker = this.worldObjects.find(
+          (unit) => unit.name === name,
+        );
 
-        // this.worldObjects.forEach((row) => {
-        //   Object.entries(row).forEach((innerParams) => {
-        //     let paramValue = innerParams[1]
-        //     if (paramValue !== name && row.position) {
-        //       currentUser.push(row);
-        //     } 
-        //   })
-        //   return currentUser
-        // })
-        // console.log(currentUser);
-
-        this.worldObjects.forEach((unit) => {
-          const foundUnit = <Unit>unit;
-          if (foundUnit.name === name) {
-            console.log(foundUnit.name, 'DUMKAI SE');
-            
-          }
-        })
+        console.log(this.worldObjects);
+        console.log(attacker?.position);
 
         if (!this.names.includes(name)) {
 
