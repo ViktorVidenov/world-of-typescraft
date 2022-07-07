@@ -1,11 +1,13 @@
 import { Point, Team, WorldObjectModel } from "src/models/models";
 
 export abstract class WorldObject implements WorldObjectModel {
+    // [x: string]: any;
     private _isDestroyed: boolean;
     private _healthPoints: number;
     private _position: Point;
     private _canMove: boolean;
     private _team: Team;
+    [name: string]: any;
 
     public get isDestroyed(): boolean {
         return this._isDestroyed;
