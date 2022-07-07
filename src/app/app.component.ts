@@ -156,14 +156,22 @@ export class AppComponent {
     const name: string = commands[1];
     switch (commands[2]) {
       case 'attack':
+        let arrWorldObject = this.worldObjects.forEach((row) =>{
+          console.log(Object.entries(row))
 
-        console.log(this.cordinates);
+
+        })
+        console.log("+++++++++++++++++++++")
+        console.log(arrWorldObject)
+        // console.log(this.cordinates);
         // this.cordinates[0] = { x: 2, y: 3 }
         // console.log(this.worldObjects, 'WorldObjec');
 
         if (this.names.includes(name)) {
 
         }
+        this.names.push(name)
+
         break;
 
       case 'gather':
