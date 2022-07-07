@@ -28,5 +28,6 @@ export class Resource extends WorldObject implements ResourcesModule {
         super(position, false)
         this._resourceType = resourceType;
         this._quantity = quantity;
+        this.healthPoints = quantity;
     }
 }

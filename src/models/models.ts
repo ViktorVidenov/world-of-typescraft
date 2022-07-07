@@ -8,7 +8,7 @@ export interface WorldObjectModel {
     modifyHealthPoints(value: number): void;
 }
 
-export interface UnitModel {
+export interface UnitModel extends WorldObjectModel {
     name: string;
     attack: number;
     defense: number;
