@@ -104,8 +104,7 @@ export class AppComponent {
           this.outputMessages.push(`Please provide valid quantity!`);
           break;
         }
-
-
+        
         if (
           resourceType !== ResourcesType.FOOD &&
           resourceType !== ResourcesType.IRON &&
@@ -130,7 +129,6 @@ export class AppComponent {
           break;
         }
 
-        
         if (validatePosition(resourceCordinates)) {
           this.outputMessages.push('Invalid Cordinates!');
           break;
