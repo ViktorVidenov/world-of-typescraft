@@ -5,7 +5,7 @@ import { WorldObject } from 'src/classes/WorldObject';
 import { Point, Team } from 'src/models/WorldObjectModel';
 import { ResourcesType } from 'src/models/ResourseModel';
 import { UnitType } from 'src/models/UnitModel';
-import { validatePosition, validateUnit, isItOnTheSamePosition } from 'src/helper/validation';
+import { validatePosition, validateUnit, isItOnTheSamePosition, getTeams } from 'src/helper/validation';
 
 @Component({
   selector: 'app-root',
@@ -128,29 +128,43 @@ export class AppComponent {
 
   public orderUnit(commands: string): void {
     const name: string = commands[1];
+    let deadsUnit: object[] = [];
+    let attackersTeam: WorldObject[] = []
+    let defendersTeam: WorldObject[] = []
+    
     switch (commands[2]) {
       case 'attack':
-
-        let nobodyAtThePosition: string[] = [];
+        
+        // let nobodyAtThePosition: string[] = [];
+        let canAttackOnce: number = 0;
         const attacker = this.worldObjects.find((unit) => unit.name === name);
 
         this.worldObjects.forEach((wordObject) => {
           if (attacker instanceof Unit && wordObject instanceof Unit) {
+
+            getTeams(attacker, wordObject, attackersTeam, defendersTeam)
+
             if (
               wordObject.position.x === attacker.position.x &&
               wordObject.position.y === attacker.position.y &&
               wordObject.team !== attacker.team &&
-              !wordObject.isDestroyed
+              !wordObject.isDestroyed && canAttackOnce === 0
             ) {
+              canAttackOnce = 1;
               let attackerDamage = attacker.attack - wordObject.defense;
               let defenderDamage = wordObject.attack - attacker.defense;
 
               wordObject.modifyHealthPoints(attackerDamage);
+              wordObject.modifyHealthPoints(attackerDamage);
               attacker.modifyHealthPoints(defenderDamage);
+
+              if (wordObject.healthPoints === 0) {
+                deadsUnit.push(wordObject)
+              }
 
               this.outputMessages
                 .push(`There was a fierce fight between ${wordObject.name} and ${attacker.name}.
-               The defender took totally ${attackerDamage} damage. The attacker took ${defenderDamage} damage.`);
+               The defender took totally ${attackerDamage} damage. The attacker took ${defenderDamage} damage. There are ${deadsUnit.length} dead units after the fight was over`);
             } else if (
               wordObject.position.x === attacker.position.x &&
               wordObject.position.y === attacker.position.y &&
@@ -161,19 +175,21 @@ export class AppComponent {
               this.outputMessages.push(
                 `You cannot attack your friends, dummy!`
               );
-              console.log(wordObject.name, wordObject.team, wordObject.position);
-            } else if ((!(wordObject.position.x.hasOwnProperty(attacker.position.x) && wordObject.position.y.hasOwnProperty(attacker.position.y))) &&
-              wordObject.name !== attacker.name && wordObject.team !== attacker.team) {
-
-                nobodyAtThePosition.push('There is no one to attack on the current coordinates')
             }
+            // else if ((!(wordObject.position.x.hasOwnProperty(attacker.position.x) && wordObject.position.y.hasOwnProperty(attacker.position.y))) &&
+            //   wordObject.name !== attacker.name && wordObject.team !== attacker.team && nobodyAtThePosition.length == 0) {
+            //   nobodyAtThePosition.push('There is no one to attack on the current coordinates')
+            // }
           }
         });
-        
-        if (nobodyAtThePosition.length !== 0) {
-          this.outputMessages.push(nobodyAtThePosition[0])
-          break;
-        }
+
+        // if (nobodyAtThePosition.length !== 0) {
+        //   this.outputMessages.push(nobodyAtThePosition[0])
+
+        //   nobodyAtThePosition = [];
+        //   console.log(nobodyAtThePosition.length, 'афтер');
+        //   break;
+        // }
 
         break;
       case 'gather':

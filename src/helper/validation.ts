@@ -1,3 +1,4 @@
+import { WorldObject } from 'src/classes/WorldObject';
 import { UnitType } from 'src/models/UnitModel';
 import { Point, Team } from 'src/models/WorldObjectModel';
 
@@ -44,4 +45,12 @@ export function isItOnTheSamePosition(cordinates: Point[], currentCordinate: Poi
     }
   });
   return isFoundEqual;
+}
+
+export function getTeams(attacker: WorldObject, wordObject: WorldObject, attackersTeam: WorldObject[], defendersTeam: WorldObject[]): void {
+  if (attacker.team === wordObject.team) {
+    attackersTeam.push(wordObject)
+  } else {
+    defendersTeam.push(wordObject)
+  }
 }
