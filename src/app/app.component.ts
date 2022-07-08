@@ -2,7 +2,9 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Resource } from 'src/classes/Resource';
 import { Unit } from 'src/classes/Unit';
 import { WorldObject } from 'src/classes/WorldObject';
-import { Point, ResourcesType, Team, UnitType } from 'src/models/models';
+import { Point, Team } from 'src/models/WorldObjectModel';
+import { ResourcesType } from 'src/models/ResourseModel';
+import { UnitType } from 'src/models/UnitModel';
 import { validatePosition } from 'src/validation/validation';
 
 @Component({
