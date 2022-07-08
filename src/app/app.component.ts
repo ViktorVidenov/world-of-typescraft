@@ -130,8 +130,11 @@ export class AppComponent {
     const name: string = commands[1];
     switch (commands[2]) {
       case 'attack':
+
+        let nobodyAtThePosition: string[] = [];
+        const attacker = this.worldObjects.find((unit) => unit.name === name);
+
         this.worldObjects.forEach((wordObject) => {
-          const attacker = this.worldObjects.find((unit) => unit.name === name);
           if (attacker instanceof Unit && wordObject instanceof Unit) {
             if (
               wordObject.position.x === attacker.position.x &&
@@ -158,9 +161,20 @@ export class AppComponent {
               this.outputMessages.push(
                 `You cannot attack your friends, dummy!`
               );
+              console.log(wordObject.name, wordObject.team, wordObject.position);
+            } else if ((!(wordObject.position.x.hasOwnProperty(attacker.position.x) && wordObject.position.y.hasOwnProperty(attacker.position.y))) &&
+              wordObject.name !== attacker.name && wordObject.team !== attacker.team) {
+
+                nobodyAtThePosition.push('There is no one to attack on the current coordinates')
             }
           }
         });
+        
+        if (nobodyAtThePosition.length !== 0) {
+          this.outputMessages.push(nobodyAtThePosition[0])
+          break;
+        }
+
         break;
       case 'gather':
         break;
