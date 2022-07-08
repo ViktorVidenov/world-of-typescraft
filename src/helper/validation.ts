@@ -35,7 +35,7 @@ export function validateUnit(
   return '';
 }
 
-export function isItOnSamePosition(cordinates: Point[], currentCordinate: Point): boolean {
+export function isItOnTheSamePosition(cordinates: Point[], currentCordinate: Point): boolean {
   let isFoundEqual = false
 
   cordinates.forEach((row) => {

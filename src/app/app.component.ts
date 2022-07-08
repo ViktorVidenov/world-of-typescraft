@@ -5,7 +5,7 @@ import { WorldObject } from 'src/classes/WorldObject';
 import { Point, Team } from 'src/models/WorldObjectModel';
 import { ResourcesType } from 'src/models/ResourseModel';
 import { UnitType } from 'src/models/UnitModel';
-import { validatePosition, validateUnit, isItOnSamePosition} from 'src/helper/validation';
+import { validatePosition, validateUnit, isItOnTheSamePosition} from 'src/helper/validation';
 
 @Component({
   selector: 'app-root',
@@ -94,7 +94,7 @@ export class AppComponent {
           break;
         }
 
-        if (isItOnSamePosition(this.cordinates, resourceCordinates)) {
+        if (isItOnTheSamePosition(this.cordinates, resourceCordinates)) {
           this.outputMessages.push(`There is already a resource at this position, please try a different position.`);
           break;
         }
