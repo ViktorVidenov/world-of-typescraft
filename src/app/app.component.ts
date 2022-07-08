@@ -149,7 +149,6 @@ export class AppComponent {
             }
           }
         })
-        
         break;
       case 'gather':
         break;
