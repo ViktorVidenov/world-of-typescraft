@@ -5,7 +5,7 @@ import { WorldObject } from 'src/classes/WorldObject';
 import { Point, Team } from 'src/models/WorldObjectModel';
 import { ResourcesType } from 'src/models/ResourseModel';
 import { UnitType } from 'src/models/UnitModel';
-import { validatePosition, validateUnit } from 'src/helper/validation';
+import { validatePosition, validateUnit, isItOnSamePosition} from 'src/helper/validation';
 
 @Component({
   selector: 'app-root',
@@ -94,7 +94,7 @@ export class AppComponent {
           break;
         }
 
-        if (this.isFoundEqualCordinates(this.cordinates, resourceCordinates)) {
+        if (isItOnSamePosition(this.cordinates, resourceCordinates)) {
           this.outputMessages.push(`There is already a resource at this position, please try a different position.`);
           break;
         }
@@ -195,17 +195,6 @@ export class AppComponent {
 
   private getStringByCoordinates(coordinates: Point): string {
     return `${coordinates.x}, ${coordinates.y}`;
-  }
-
-  private isFoundEqualCordinates(cordinates: Point[], currentCordinate: Point): boolean {
-    let isFoundEqual = false
-
-    cordinates.forEach((row) => {
-      if (row.x === currentCordinate.x && row.y === currentCordinate.y) {
-        isFoundEqual = true;
-      }
-    });
-    return isFoundEqual;
   }
 
   private moveUnit(

@@ -34,3 +34,14 @@ export function validateUnit(
 
   return '';
 }
+
+export function isItOnSamePosition(cordinates: Point[], currentCordinate: Point): boolean {
+  let isFoundEqual = false
+
+  cordinates.forEach((row) => {
+    if (row.x === currentCordinate.x && row.y === currentCordinate.y) {
+      isFoundEqual = true;
+    }
+  });
+  return isFoundEqual;
+}
