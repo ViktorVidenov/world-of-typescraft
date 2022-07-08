@@ -1,4 +1,4 @@
-import { Point, Team, WorldObjectModel } from "src/models/models";
+import { Point, Team, WorldObjectModel } from "src/models/WorldObjectModel";
 
 export abstract class WorldObject implements WorldObjectModel {
     private _isDestroyed: boolean;

@@ -1,4 +1,5 @@
-import { Point, Team, UnitModel, UnitType } from "src/models/models";
+import { Point, Team } from "src/models/WorldObjectModel";
+import { UnitModel, UnitType } from "src/models/UnitModel"
 import { WorldObject } from "./WorldObject";
 
 export class Unit extends WorldObject implements UnitModel {
