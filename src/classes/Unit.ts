@@ -8,6 +8,7 @@ export class Unit extends WorldObject implements UnitModel {
     private _defense: number;
     private _canGather: boolean;
     private _type: UnitType;
+    private _unitPoints: number;
 
     public get name(): string {
         return this._name;
@@ -29,10 +30,15 @@ export class Unit extends WorldObject implements UnitModel {
         return this._type;
     }
 
-    constructor(name: string, position: Point, team: Team, type: UnitType) {
+    public get unitPoints(): number {
+        return this._unitPoints;
+    }
+
+    constructor(name: string, position: Point, team: Team, type: UnitType, unitPoints?: number) {
         super(position, true, team);
         this._name = name;
         this._type = type;
+        this._unitPoints = this.unitPoints
 
         this.setUnitStats(type)
     }
@@ -45,6 +51,7 @@ export class Unit extends WorldObject implements UnitModel {
                 this._canGather = false;
                 this.healthPoints = 80;
                 this.canMove = true;
+                this._unitPoints = 10;
                 break;
             case UnitType.GIANT:
                 this._attack = 40;
@@ -52,6 +59,7 @@ export class Unit extends WorldObject implements UnitModel {
                 this._canGather = true;
                 this.healthPoints = 90;
                 this.canMove = true;
+                this._unitPoints = 15;
                 break;
             case UnitType.NINJA:
                 this._attack = 50;
@@ -59,6 +67,7 @@ export class Unit extends WorldObject implements UnitModel {
                 this._canGather = false;
                 this.healthPoints = 80;
                 this.canMove = true;
+                this._unitPoints = 15;
                 break;
             case UnitType.PEASANT:
                 this._attack = 25;
@@ -66,6 +75,7 @@ export class Unit extends WorldObject implements UnitModel {
                 this._canGather = true;
                 this.healthPoints = 50;
                 this.canMove = true;
+                this._unitPoints = 5;
                 break;
             default:
                 break;
