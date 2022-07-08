@@ -16,12 +16,11 @@ export class AppComponent {
   public outputMessages: string[] = [];
   public worldObjects: WorldObject[] = [];
   public names: string[] = [];
-  public cordinates: object[] = [];
-  public isFindedEqualCordinates: boolean = false;
+  public cordinates: Point[] = [];
 
   @ViewChild('inputArea') inputArea: ElementRef;
 
-  constructor() {}
+  constructor() { }
 
   executeCommand() {
     const commands = this.inputArea.nativeElement.value.split(' ');
@@ -63,8 +62,8 @@ export class AppComponent {
             `Created ${type.toString().toLowerCase()} from ${team
               .toString()
               .toLowerCase()} team named ${name} at position ${this.getStringByCoordinates(
-              cordinates
-            )}`
+                cordinates
+              )}`
           );
         } else {
           this.outputMessages.push(unitValidation);
@@ -95,15 +94,13 @@ export class AppComponent {
           break;
         }
 
-        this.compareCordinates(this.cordinates, resourceCordinates);
-
-        if (validatePosition(resourceCordinates)) {
-          this.outputMessages.push('Invalid Cordinates!');
+        if (this.isFoundEqualCordinates(this.cordinates, resourceCordinates)) {
+          this.outputMessages.push(`There is already a resource at this position, please try a different position.`);
           break;
         }
 
-        if (this.isFindedEqualCordinates) {
-          this.isFindedEqualCordinates = false;
+        if (validatePosition(resourceCordinates)) {
+          this.outputMessages.push('Invalid Cordinates!');
           break;
         }
 
@@ -119,8 +116,8 @@ export class AppComponent {
           `Created ${resourceType
             .toString()
             .toLowerCase()} at position ${this.getStringByCoordinates(
-            resourceCordinates
-          )} with ${healthPoints} health`
+              resourceCordinates
+            )} with ${healthPoints} health`
         );
         break;
 
@@ -200,15 +197,15 @@ export class AppComponent {
     return `${coordinates.x}, ${coordinates.y}`;
   }
 
-  private compareCordinates(cordinates: object[], currentCordinate: object) {
+  private isFoundEqualCordinates(cordinates: Point[], currentCordinate: Point): boolean {
+    let isFoundEqual = false
+
     cordinates.forEach((row) => {
-      if (JSON.stringify(row) === JSON.stringify(currentCordinate)) {
-        this.outputMessages.push(
-          `There is already a resource at this position, please try a different position.`
-        );
-        this.isFindedEqualCordinates = true;
+      if (row.x === currentCordinate.x && row.y === currentCordinate.y) {
+        isFoundEqual = true;
       }
     });
+    return isFoundEqual;
   }
 
   private moveUnit(
