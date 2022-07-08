@@ -13,7 +13,7 @@ export function validateUnit(
   coordinates: Point
 ): string {
   if (names.includes(name)) {
-    return 'Unit with this name already exists!';
+    return 'Unit with this name already exists!!';
   }
 
   if (name.length >= 20) {
