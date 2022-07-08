@@ -1,4 +1,4 @@
-import { WorldObjectModel } from "./WorldObjectModel";
+import { WorldObjectModel } from './WorldObjectModel';
 
 export interface UnitModel extends WorldObjectModel {
   name: string;

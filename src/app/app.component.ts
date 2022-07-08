@@ -5,14 +5,13 @@ import { WorldObject } from 'src/classes/WorldObject';
 import { Point, Team } from 'src/models/WorldObjectModel';
 import { ResourcesType } from 'src/models/ResourseModel';
 import { UnitType } from 'src/models/UnitModel';
-import { validatePosition } from 'src/validation/validation';
+import { validatePosition, validateUnit } from 'src/helper/validation';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-
 export class AppComponent {
   public outputMessages: string[] = [];
   public worldObjects: WorldObject[] = [];
@@ -22,7 +21,7 @@ export class AppComponent {
 
   @ViewChild('inputArea') inputArea: ElementRef;
 
-  constructor() { }
+  constructor() {}
 
   executeCommand() {
     const commands = this.inputArea.nativeElement.value.split(' ');
@@ -47,47 +46,37 @@ export class AppComponent {
         const cordinates: Point = this.getCordinatesByString(commands[3]);
         const team: Team = commands[4].toUpperCase() as Team;
         const type: UnitType = commands[5].toUpperCase() as UnitType;
-
-        if (this.names.includes(name)) {
-          this.outputMessages.push('Unit with this name already exists!');
-          break;
-        }
-
-        if (!Object.values(Team).includes(team)) {
-          this.outputMessages.push(
-            `Team ${team.toLowerCase()} does not exist!`
-          );
-          break;
-        }
-
-        if (!Object.values(UnitType).includes(type)) {
-          this.outputMessages.push(
-            `Unit type ${type.toLowerCase()} does not exist!`
-          );
-          break;
-        }
-
-        if (name.length >= 20) {
-          this.outputMessages.push('Unit name too long!');
-          break;
-        }
-
-        if (validatePosition(cordinates)) {
-          this.outputMessages.push('Invalid Cordinates!');
-          break;
-        }
-
-        const unit = new Unit(name, cordinates, team, type);
-        this.worldObjects.push(unit);
-        this.names.push(name);
-
-        this.outputMessages.push(`Created ${type.toString().toLowerCase()} from ${team.toString().toLowerCase()} team named ${name} at position ${this.getStringByCoordinates(cordinates)}`
+        const unitValidation = validateUnit(
+          name,
+          this.names,
+          team,
+          type,
+          cordinates
         );
+
+        if (!unitValidation) {
+          const unit = new Unit(name, cordinates, team, type);
+          this.worldObjects.push(unit);
+          this.names.push(name);
+
+          this.outputMessages.push(
+            `Created ${type.toString().toLowerCase()} from ${team
+              .toString()
+              .toLowerCase()} team named ${name} at position ${this.getStringByCoordinates(
+              cordinates
+            )}`
+          );
+        } else {
+          this.outputMessages.push(unitValidation);
+        }
         break;
 
       case 'resource':
-        const resourceType: ResourcesType = commands[2].toUpperCase() as ResourcesType;
-        const resourceCordinates: Point = this.getCordinatesByString(commands[3]);
+        const resourceType: ResourcesType =
+          commands[2].toUpperCase() as ResourcesType;
+        const resourceCordinates: Point = this.getCordinatesByString(
+          commands[3]
+        );
         const healthPoints: number = Number(commands[4]);
 
         if (healthPoints < 1 || isNaN(healthPoints)) {
@@ -95,7 +84,11 @@ export class AppComponent {
           break;
         }
 
-        if (resourceType !== ResourcesType.FOOD && resourceType !== ResourcesType.IRON && resourceType !== ResourcesType.LUMBER) {
+        if (
+          resourceType !== ResourcesType.FOOD &&
+          resourceType !== ResourcesType.IRON &&
+          resourceType !== ResourcesType.LUMBER
+        ) {
           this.outputMessages.push(
             `Resource type ${resourceType} does not exist!`
           );
@@ -114,11 +107,21 @@ export class AppComponent {
           break;
         }
 
-        const resource = new Resource(resourceType, resourceCordinates, healthPoints);
+        const resource = new Resource(
+          resourceType,
+          resourceCordinates,
+          healthPoints
+        );
         this.cordinates.push(resourceCordinates);
         this.worldObjects.push(resource);
 
-        this.outputMessages.push(`Created ${resourceType.toString().toLowerCase()} at position ${this.getStringByCoordinates(resourceCordinates)} with ${healthPoints} health`);
+        this.outputMessages.push(
+          `Created ${resourceType
+            .toString()
+            .toLowerCase()} at position ${this.getStringByCoordinates(
+            resourceCordinates
+          )} with ${healthPoints} health`
+        );
         break;
 
       default:
@@ -130,27 +133,37 @@ export class AppComponent {
     const name: string = commands[1];
     switch (commands[2]) {
       case 'attack':
-
         this.worldObjects.forEach((unit) => {
-          const attacker = this.worldObjects.find(
-            (unit) => unit.name === name,
-          );
+          const attacker = this.worldObjects.find((unit) => unit.name === name);
           if (attacker instanceof Unit && unit instanceof Unit) {
-            if (unit.position.x === attacker.position.x && unit.position.y === attacker.position.y && unit.team !== attacker.team && !unit.isDestroyed) {
-
+            if (
+              unit.position.x === attacker.position.x &&
+              unit.position.y === attacker.position.y &&
+              unit.team !== attacker.team &&
+              !unit.isDestroyed
+            ) {
               let attackerDamage = attacker.attack - unit.defense;
               let defenderDamage = unit.attack - attacker.defense;
 
               unit.modifyHealthPoints(attackerDamage);
               attacker.modifyHealthPoints(defenderDamage);
 
-              this.outputMessages.push(`There was a fierce fight between ${unit.name} and ${attacker.name}.
-               The defender took totally ${attackerDamage} damage. The attacker took ${defenderDamage} damage.`)
-            } else if (unit.position.x === attacker.position.x && unit.position.y === attacker.position.y && attacker.team === unit.team && attacker.name !== unit.name && !unit.isDestroyed) {
-              this.outputMessages.push(`You cannot attack your friends, dummy!`)
+              this.outputMessages
+                .push(`There was a fierce fight between ${unit.name} and ${attacker.name}.
+               The defender took totally ${attackerDamage} damage. The attacker took ${defenderDamage} damage.`);
+            } else if (
+              unit.position.x === attacker.position.x &&
+              unit.position.y === attacker.position.y &&
+              attacker.team === unit.team &&
+              attacker.name !== unit.name &&
+              !unit.isDestroyed
+            ) {
+              this.outputMessages.push(
+                `You cannot attack your friends, dummy!`
+              );
             }
           }
-        })
+        });
         break;
       case 'gather':
         break;
@@ -167,11 +180,9 @@ export class AppComponent {
           break;
         }
 
-        const foundUnit = this.worldObjects.find(
-          (unit) => unit.name === name
-        );
+        const foundUnit = this.worldObjects.find((unit) => unit.name === name);
 
-        this.moveUnit(position, foundUnit, this.worldObjects)
+        this.moveUnit(position, foundUnit, this.worldObjects);
 
         break;
 
@@ -200,17 +211,22 @@ export class AppComponent {
     });
   }
 
-  private moveUnit(position: Point, foundUnit: any, worldObjects: WorldObject[]): void {
-
+  private moveUnit(
+    position: Point,
+    foundUnit: any,
+    worldObjects: WorldObject[]
+  ): void {
     worldObjects.forEach((player) => {
       if (foundUnit instanceof Unit) {
-        Object.values(player).forEach(playerValues => {
+        Object.values(player).forEach((playerValues) => {
           if (playerValues === foundUnit.name) {
             player.modifyPosition(position);
-            this.outputMessages.push(`Unit ${foundUnit.name} moved to ${position.x}, ${position.y}`);
+            this.outputMessages.push(
+              `Unit ${foundUnit.name} moved to ${position.x}, ${position.y}`
+            );
           }
-        })
+        });
       }
-    })
+    });
   }
 }
