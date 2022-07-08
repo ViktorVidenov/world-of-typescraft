@@ -5,7 +5,7 @@ import { WorldObject } from 'src/classes/WorldObject';
 import { Point, Team } from 'src/models/WorldObjectModel';
 import { ResourcesType } from 'src/models/ResourseModel';
 import { UnitType } from 'src/models/UnitModel';
-import { validatePosition, validateUnit, isItOnTheSamePosition} from 'src/helper/validation';
+import { validatePosition, validateUnit, isItOnTheSamePosition } from 'src/helper/validation';
 
 @Component({
   selector: 'app-root',
@@ -38,7 +38,7 @@ export class AppComponent {
     }
   }
 
-  public createWorldObject(commands: string[]) {
+  public createWorldObject(commands: string[]): void {
     switch (commands[1]) {
       case 'unit':
         const name: string = commands[2];
@@ -78,7 +78,7 @@ export class AppComponent {
         );
         const healthPoints: number = Number(commands[4]);
 
-        if (healthPoints < 1 || isNaN(healthPoints)) {
+        if (isNaN(healthPoints) || healthPoints < 1) {
           this.outputMessages.push(`Please provide valid quantity!`);
           break;
         }
@@ -126,34 +126,34 @@ export class AppComponent {
     }
   }
 
-  public orderUnit(commands: string) {
+  public orderUnit(commands: string): void {
     const name: string = commands[1];
     switch (commands[2]) {
       case 'attack':
-        this.worldObjects.forEach((unit) => {
+        this.worldObjects.forEach((wordObject) => {
           const attacker = this.worldObjects.find((unit) => unit.name === name);
-          if (attacker instanceof Unit && unit instanceof Unit) {
+          if (attacker instanceof Unit && wordObject instanceof Unit) {
             if (
-              unit.position.x === attacker.position.x &&
-              unit.position.y === attacker.position.y &&
-              unit.team !== attacker.team &&
-              !unit.isDestroyed
+              wordObject.position.x === attacker.position.x &&
+              wordObject.position.y === attacker.position.y &&
+              wordObject.team !== attacker.team &&
+              !wordObject.isDestroyed
             ) {
-              let attackerDamage = attacker.attack - unit.defense;
-              let defenderDamage = unit.attack - attacker.defense;
+              let attackerDamage = attacker.attack - wordObject.defense;
+              let defenderDamage = wordObject.attack - attacker.defense;
 
-              unit.modifyHealthPoints(attackerDamage);
+              wordObject.modifyHealthPoints(attackerDamage);
               attacker.modifyHealthPoints(defenderDamage);
 
               this.outputMessages
-                .push(`There was a fierce fight between ${unit.name} and ${attacker.name}.
+                .push(`There was a fierce fight between ${wordObject.name} and ${attacker.name}.
                The defender took totally ${attackerDamage} damage. The attacker took ${defenderDamage} damage.`);
             } else if (
-              unit.position.x === attacker.position.x &&
-              unit.position.y === attacker.position.y &&
-              attacker.team === unit.team &&
-              attacker.name !== unit.name &&
-              !unit.isDestroyed
+              wordObject.position.x === attacker.position.x &&
+              wordObject.position.y === attacker.position.y &&
+              attacker.team === wordObject.team &&
+              attacker.name !== wordObject.name &&
+              !wordObject.isDestroyed
             ) {
               this.outputMessages.push(
                 `You cannot attack your friends, dummy!`
