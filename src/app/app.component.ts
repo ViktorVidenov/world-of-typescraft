@@ -131,11 +131,10 @@ export class AppComponent {
     let deadsUnit: object[] = [];
     let attackersTeam: WorldObject[] = []
     let defendersTeam: WorldObject[] = []
-    
+
     switch (commands[2]) {
       case 'attack':
-        
-        // let nobodyAtThePosition: string[] = [];
+
         let canAttackOnce: number = 0;
         const attacker = this.worldObjects.find((unit) => unit.name === name);
 
@@ -161,7 +160,6 @@ export class AppComponent {
               if (wordObject.healthPoints === 0) {
                 deadsUnit.push(wordObject)
               }
-
               this.outputMessages
                 .push(`There was a fierce fight between ${wordObject.name} and ${attacker.name}.
                The defender took totally ${attackerDamage} damage. The attacker took ${defenderDamage} damage. There are ${deadsUnit.length} dead units after the fight was over`);
@@ -176,23 +174,24 @@ export class AppComponent {
                 `You cannot attack your friends, dummy!`
               );
             }
-            // else if ((!(wordObject.position.x.hasOwnProperty(attacker.position.x) && wordObject.position.y.hasOwnProperty(attacker.position.y))) &&
-            //   wordObject.name !== attacker.name && wordObject.team !== attacker.team && nobodyAtThePosition.length == 0) {
-            //   nobodyAtThePosition.push('There is no one to attack on the current coordinates')
-            // }
           }
         });
 
-        // if (nobodyAtThePosition.length !== 0) {
-        //   this.outputMessages.push(nobodyAtThePosition[0])
-
-        //   nobodyAtThePosition = [];
-        //   console.log(nobodyAtThePosition.length, 'афтер');
-        //   break;
-        // }
-
         break;
       case 'gather':
+        const unit: WorldObject[] = [];
+
+        this.worldObjects.forEach((worldObject) => {
+          if (worldObject instanceof Unit) {
+            if (name === worldObject.name || worldObject.canGather === false || worldObject.type == UnitType.GUARD || worldObject.type == UnitType.NINJA) {
+              unit.push(worldObject);
+            }
+          }
+
+          if (worldObject instanceof Resource) {
+
+          }
+        })
         break;
 
       case 'go':
