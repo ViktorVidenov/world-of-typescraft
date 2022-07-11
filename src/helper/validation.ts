@@ -1,4 +1,5 @@
 import { WorldObject } from 'src/classes/WorldObject';
+import { ResourcesType } from 'src/models/ResourseModel';
 import { UnitType } from 'src/models/UnitModel';
 import { Point, Team } from 'src/models/WorldObjectModel';
 
@@ -34,6 +35,37 @@ export function validateUnit(
   }
 
   return '';
+}
+
+export function validateResource (
+  resourceType: ResourcesType,
+  healthPoints: number,
+  resourceCordinates: Point,
+  cordinates: Point[],
+): string {
+
+  if (isNaN(healthPoints) || healthPoints < 1) {
+   return `Please provide valid quantity!`;
+  }
+
+  if (
+    resourceType !== ResourcesType.FOOD &&
+    resourceType !== ResourcesType.IRON &&
+    resourceType !== ResourcesType.LUMBER
+  ) {
+     return `Resource type ${resourceType} does not exist!`
+  }
+
+  if (isItOnTheSamePosition(cordinates, resourceCordinates)) {
+   return `There is already a resource at this position, please try a different position.`;
+  }
+
+  if (validatePosition(resourceCordinates)) {
+   return 'Invalid Cordinates!'
+    
+  }
+
+  return ''
 }
 
 export function isItOnTheSamePosition(cordinates: Point[], currentCordinate: Point): boolean {
