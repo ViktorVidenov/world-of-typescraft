@@ -8,10 +8,8 @@ import { UnitType } from 'src/models/UnitModel';
 import {
   validatePosition,
   validateUnit,
-  isItOnTheSamePosition,
-  getTeams,
   validateResource,
-} from 'src/helper/validation';
+} from 'src/helper/validation-helper';
 
 @Component({
   selector: 'app-root',
@@ -129,12 +127,12 @@ export class AppComponent {
 
         this.worldObjects.forEach((wordObject) => {
           if (attacker instanceof Unit && wordObject instanceof Unit) {
-            getTeams(attacker, wordObject, attackersTeam, defendersTeam);
+            attacker.team === wordObject.team ? attackersTeam.push(wordObject) : defendersTeam.push(wordObject);
 
             if (
               wordObject.position.x === attacker.position.x &&
               wordObject.position.y === attacker.position.y &&
-              wordObject.team !== attacker.team &&
+              wordObject.team !== attacker.team && 
               !wordObject.isDestroyed &&
               canAttackOnce === 0
             ) {
@@ -224,11 +222,11 @@ export class AppComponent {
     foundUnit: any,
     worldObjects: WorldObject[]
   ): void {
-    worldObjects.forEach((player) => {
+    worldObjects.forEach((worldObject) => {
       if (foundUnit instanceof Unit) {
-        Object.values(player).forEach((playerValues) => {
+        Object.values(worldObject).forEach((playerValues) => {
           if (playerValues === foundUnit.name) {
-            player.modifyPosition(position);
+            worldObject.modifyPosition(position);
             this.outputMessages.push(
               `Unit ${foundUnit.name} moved to ${position.x}, ${position.y}`
             );

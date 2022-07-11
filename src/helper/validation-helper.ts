@@ -78,11 +78,3 @@ export function isItOnTheSamePosition(cordinates: Point[], currentCordinate: Poi
   });
   return isFoundEqual;
 }
-
-export function getTeams(attacker: WorldObject, wordObject: WorldObject, attackersTeam: WorldObject[], defendersTeam: WorldObject[]): void {
-  if (attacker.team === wordObject.team) {
-    attackersTeam.push(wordObject)
-  } else {
-    defendersTeam.push(wordObject)
-  }
-}
