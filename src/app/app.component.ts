@@ -5,7 +5,13 @@ import { WorldObject } from 'src/classes/WorldObject';
 import { Point, Team } from 'src/models/WorldObjectModel';
 import { ResourcesType } from 'src/models/ResourseModel';
 import { UnitType } from 'src/models/UnitModel';
-import { validatePosition, validateUnit, isItOnTheSamePosition, getTeams } from 'src/helper/validation';
+import {
+  validatePosition,
+  validateUnit,
+  isItOnTheSamePosition,
+  getTeams,
+  validateResource,
+} from 'src/helper/validation';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +26,7 @@ export class AppComponent {
 
   @ViewChild('inputArea') inputArea: ElementRef;
 
-  constructor() { }
+  constructor() {}
 
   executeCommand() {
     const commands = this.inputArea.nativeElement.value.split(' ');
@@ -62,8 +68,8 @@ export class AppComponent {
             `Created ${type.toString().toLowerCase()} from ${team
               .toString()
               .toLowerCase()} team named ${name} at position ${this.getStringByCoordinates(
-                cordinates
-              )}`
+              cordinates
+            )}`
           );
         } else {
           this.outputMessages.push(unitValidation);
@@ -77,48 +83,32 @@ export class AppComponent {
           commands[3]
         );
         const healthPoints: number = Number(commands[4]);
-
-        if (isNaN(healthPoints) || healthPoints < 1) {
-          this.outputMessages.push(`Please provide valid quantity!`);
-          break;
-        }
-
-        if (
-          resourceType !== ResourcesType.FOOD &&
-          resourceType !== ResourcesType.IRON &&
-          resourceType !== ResourcesType.LUMBER
-        ) {
-          this.outputMessages.push(
-            `Resource type ${resourceType} does not exist!`
-          );
-          break;
-        }
-
-        if (isItOnTheSamePosition(this.cordinates, resourceCordinates)) {
-          this.outputMessages.push(`There is already a resource at this position, please try a different position.`);
-          break;
-        }
-
-        if (validatePosition(resourceCordinates)) {
-          this.outputMessages.push('Invalid Cordinates!');
-          break;
-        }
-
-        const resource = new Resource(
+        const resourceValidation = validateResource(
           resourceType,
+          healthPoints,
           resourceCordinates,
-          healthPoints
+          this.cordinates
         );
-        this.cordinates.push(resourceCordinates);
-        this.worldObjects.push(resource);
 
-        this.outputMessages.push(
-          `Created ${resourceType
-            .toString()
-            .toLowerCase()} at position ${this.getStringByCoordinates(
+        if (!resourceValidation) {
+          const resource = new Resource(
+            resourceType,
+            resourceCordinates,
+            healthPoints
+          );
+          this.cordinates.push(resourceCordinates);
+          this.worldObjects.push(resource);
+
+          this.outputMessages.push(
+            `Created ${resourceType
+              .toString()
+              .toLowerCase()} at position ${this.getStringByCoordinates(
               resourceCordinates
             )} with ${healthPoints} health`
-        );
+          );
+        } else {
+          this.outputMessages.push(resourceValidation);
+        }
         break;
 
       default:
@@ -129,25 +119,24 @@ export class AppComponent {
   public orderUnit(commands: string): void {
     const name: string = commands[1];
     let deadsUnit: object[] = [];
-    let attackersTeam: WorldObject[] = []
-    let defendersTeam: WorldObject[] = []
+    let attackersTeam: WorldObject[] = [];
+    let defendersTeam: WorldObject[] = [];
 
     switch (commands[2]) {
       case 'attack':
-
         let canAttackOnce: number = 0;
         const attacker = this.worldObjects.find((unit) => unit.name === name);
 
         this.worldObjects.forEach((wordObject) => {
           if (attacker instanceof Unit && wordObject instanceof Unit) {
-
-            getTeams(attacker, wordObject, attackersTeam, defendersTeam)
+            getTeams(attacker, wordObject, attackersTeam, defendersTeam);
 
             if (
               wordObject.position.x === attacker.position.x &&
               wordObject.position.y === attacker.position.y &&
               wordObject.team !== attacker.team &&
-              !wordObject.isDestroyed && canAttackOnce === 0
+              !wordObject.isDestroyed &&
+              canAttackOnce === 0
             ) {
               canAttackOnce = 1;
               let attackerDamage = attacker.attack - wordObject.defense;
@@ -158,7 +147,7 @@ export class AppComponent {
               attacker.modifyHealthPoints(defenderDamage);
 
               if (wordObject.healthPoints === 0) {
-                deadsUnit.push(wordObject)
+                deadsUnit.push(wordObject);
               }
               this.outputMessages
                 .push(`There was a fierce fight between ${wordObject.name} and ${attacker.name}.
@@ -183,15 +172,19 @@ export class AppComponent {
 
         this.worldObjects.forEach((worldObject) => {
           if (worldObject instanceof Unit) {
-            if (name === worldObject.name || worldObject.canGather === false || worldObject.type == UnitType.GUARD || worldObject.type == UnitType.NINJA) {
+            if (
+              name === worldObject.name ||
+              worldObject.canGather === false ||
+              worldObject.type == UnitType.GUARD ||
+              worldObject.type == UnitType.NINJA
+            ) {
               unit.push(worldObject);
             }
           }
 
           if (worldObject instanceof Resource) {
-
           }
-        })
+        });
         break;
 
       case 'go':
